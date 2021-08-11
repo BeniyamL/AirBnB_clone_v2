@@ -1,4 +1,4 @@
-"""This is the amenity class"""
+"""Theclass of the amenity """
 import models.base_model as mb
 import os
 import sqlalchemy as s
