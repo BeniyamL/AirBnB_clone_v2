@@ -1,42 +1,83 @@
 #!/usr/bin/python3
-""" Place Module for HBNB project """
+"""This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
-from os import getenv
-import models
-from sqlalchemy.orm import relationship
-from models.review import Review
-from models.amenity import Amenity
+import sqlalchemy as s
+import sqlalchemy.orm as orm
+import os
 
+metadata = Base.metadata
 
-place_amenity = Table('place_amenity', Base.metadata,
-                      Column('place_id', String(60),
-                             ForeignKey('places.id'),
-                             primary_key=True,
-                             nullable=False),
-                      Column('amenity_id', String(60),
-                             ForeignKey('amenities.id'),
-                             primary_key=True,
-                             nullable=False))
+place_amenity = s.Table(
+    'place_amenity', metadata,
+    s.Column(
+        'place_id',
+        s.String(60),
+        s.ForeignKey('places.id'),
+        primary_key=True,
+        nullable=False
+    ),
+    s.Column(
+        'amenity_id',
+        s.String(60),
+        s.ForeignKey('amenities.id'),
+        primary_key=True,
+        nullable=False
+    )
+)
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """This is the class for Place
+    Attributes:
+        city_id: city id
+        user_id: user id
+        name: name input
+        description: string of description
+        number_rooms: number of room in int
+        number_bathrooms: number of bathrooms in int
+        max_guest: maximum guest in int
+        price_by_night:: pice for a staying in int
+        latitude: latitude in flaot
+        longitude: longitude in float
+        amenity_ids: list of Amenity ids
+    """
     __tablename__ = 'places'
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
-        user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
-        name = Column(String(128), nullable=False)
-        description = Column(String(1024))
-        number_rooms = Column(Integer, default=0, nullable=False)
-        number_bathrooms = Column(Integer, default=0, nullable=False)
-        max_guest = Column(Integer, default=0, nullable=False)
-        price_by_night = Column(Integer, default=0, nullable=False)
-        latitude = Column(Float)
-        longitude = Column(Float)
-        reviews = relationship('Review', backref='place', cascade='delete')
-        amenities = relationship('Amenity', secondary='place_amenity',
-                                 viewonly=False)
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        city_id = s.Column(
+            s.String(60),
+            s.ForeignKey('cities.id'),
+            nullable=False
+        )
+        user_id = s.Column(
+            s.String(60),
+            s.ForeignKey('users.id'),
+            nullable=False
+        )
+        name = s.Column(s.String(128), nullable=False)
+        description = s.Column(s.String(1024), nullable=True)
+        number_rooms = s.Column(s.Integer, nullable=False, default=0)
+        number_bathrooms = s.Column(s.Integer, nullable=False, default=0)
+        max_guest = s.Column(s.Integer, nullable=False, default=0)
+        price_by_night = s.Column(s.Integer, nullable=False, default=0)
+        latitude = s.Column(s.Float, nullable=True)
+        longitude = s.Column(s.Float, nullable=True)
+        amenity_ids = []
+
+        reviews = orm.relationship(
+            'Review', back_populates='place',
+            cascade='all, delete, delete-orphan'
+        )
+
+        user = orm.relationship(
+            'User', back_populates='places'
+        )
+
+        amenities = orm.relationship(
+            'Amenity', secondary='place_amenity',
+            viewonly=False, back_populates='place_amenities')
+
+        cities = orm.relationship(
+            'City', back_populates='places')
     else:
         city_id = ""
         user_id = ""
@@ -52,24 +93,21 @@ class Place(BaseModel, Base):
 
         @property
         def reviews(self):
-            """ getter method for the reviews """
-            review_list = []
-            for rvw in models.storage.all(Review).values():
-                if rvw.place_id == self.id:
-                    review_list.append(rvw)
-            return review_list
+            """getter for review return list of reviews."""
+            reviews_inst = []
+            reviews_dict = models.storage.all('Review')
+            for key, value in reviews_dict.items():
+                if self.id == value.place_id:
+                    reviews_inst.append(value)
+            return reviews_inst
 
         @property
         def amenities(self):
-            """ getter method for the amenities """
-            amenity_list = []
-            for amn in models.storage.all(Amenity).values():
-                if amn.id in self.amenity_ids:
-                    amenity_list.append(amn)
-            return amenity_list
+            """getter for amenities returns list of amenity instanc"""
+            return self.amenity_ids
 
         @amenities.setter
-        def amenities(self, value):
-            """ setter method for the amenities """
-            if type(value) == Amenity:
-                self.amenity_ids.append(value.id)
+        def amenities(self, obj):
+            """setter for amenities"""
+            if isinstance(obj, Amenity):
+                self.amenity_ids.append(obj.id)
