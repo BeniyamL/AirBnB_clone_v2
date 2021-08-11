@@ -5,6 +5,8 @@ from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from os import getenv
 import models
 from sqlalchemy.orm import relationship
+from models.review import Review
+from models.amenity import Amenity
 
 
 place_amenity = Table('place_amenity', Base.metadata,
@@ -34,6 +36,7 @@ class Place(BaseModel, Base):
         longitude = Column(Float)
         reviews = relationship('Review', backref='place', cascade='delete')
         amenities = relationship('Amenity', secondary='place_amenity',
+                                 back_populates='place_amenities',
                                  viewonly=False)
     else:
         city_id = ""
