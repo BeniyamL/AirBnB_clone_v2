@@ -6,9 +6,8 @@ import sqlalchemy.orm as orm
 
 
 class Amenity(mb.BaseModel, mb.Base):
-    """This is the class for Amenity
-    Attributes:
-        name: input name
+    """The class for Amenity
+    With name as Attribute
     """
     __tablename__ = 'amenities'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
