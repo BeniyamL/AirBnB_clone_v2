@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 """ module to deploy clean the out date archive """
 
-from fabric.api import run, env, local
+from fabric.api import *
 import os.path
 
 env.hosts = ["34.75.251.99", "35.237.151.121"]
+
+env.user = "ubuntu"
 
 
 def do_clean(number=0):
@@ -25,7 +27,7 @@ def do_clean(number=0):
                 run("rm -rf {folder}".format(folder=each_folder))
 
 
-def find__out_dated(number, tp):
+def find_out_dated(number, tp):
     """ function to find the outdated file """
     if tp == 'local':
         all_archive = local("ls -td web_static_*", capture=True)

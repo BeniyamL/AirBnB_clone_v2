@@ -3,10 +3,12 @@
 
 from fabric.api import run, put, env, local
 import os.path
-import datetime import datetime
+from datetime import datetime
 
 
 env.hosts = ["34.75.251.99", "35.237.151.121"]
+
+env.user = "ubuntu"
 
 
 def deploy():
@@ -37,34 +39,19 @@ def do_pack():
 def do_deploy(archive_path):
     """ function to deploy the archive to the remote server"""
 
-    if os.path.isfile(archive_path) is False:
+    if os.path.exists(archive_path) is False:
         return False
-    file_name = archive_path.split("/")[-1]
-    fn_only = file_name.split(".")[0]
+    arch_name = archive_path.split("/")[-1]
+    f_name = arch_name.split(".")[0]
+    arch_path = "/tmp/{}".format(arch_name)
+    f_path = "/data/web_static/releases/{}/".format(f_name)
 
-    if put(archive_path, "/tmp/{}".format(file_name)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/releases/{}/".
-           format(fn_only)).failed is True:
-        return False
-    if run("mkdir -p /data/web_static/releases/{}/".
-           format(fn_only)).failed is True:
-        return False
-    if run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
-           format(file_name, fn_only)).failed is True:
-        return False
-    if run("rm /tmp/{}".format(file_name)).failed is True:
-        return False
-    if run("mv /data/web_static/releases/{}/web_static/* "
-           "/data/web_static/releases/{}/".
-           format(fn_only, fn_only)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/releases/{}/web_static".
-           format(fn_only)).failed is True:
-        return False
-    if run("rm -rf /data/web_static/current").failed is True:
-        return False
-    if run("ln -s /data/web_static/releases/{}/ "
-           "/data/web_static/current".format(fn_only)).failed is True:
-        return False
+    run("sudo mkdir -p {}".format(f_path))
+    put(archive_path, "/tmp/")
+    run("sudo tar -xzf {} -C {}".format(arch_path, f_path))
+    run("sudo rm {}".format(arch_path))
+    run("sudo mv -f {}web_static/* {}".format(f_path, f_path))
+    run("sudo rm -rf {}web_static".format(f_path))
+    run("sudo rm -rf /data/web_static/current")
+    run("sudo ln -s {} /data/web_static/current".format(f_path))
     return True

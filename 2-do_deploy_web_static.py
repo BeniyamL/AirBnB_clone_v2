@@ -7,6 +7,8 @@ import os.path
 
 env.hosts = ["34.75.251.99", "35.237.151.121"]
 
+env.user = "ubuntu"
+
 
 def do_deploy(archive_path):
     """ function to deploy the archive to the remote server"""
@@ -18,8 +20,8 @@ def do_deploy(archive_path):
     arch_path = "/tmp/{}".format(arch_name)
     f_path = "/data/web_static/releases/{}/".format(f_name)
 
-    put(archive_path, arch_path)
     run("sudo mkdir -p {}".format(f_path))
+    put(archive_path, "/tmp/")
     run("sudo tar -xzf {} -C {}".format(arch_path, f_path))
     run("sudo rm {}".format(arch_path))
     run("sudo mv -f {}web_static/* {}".format(f_path, f_path))
