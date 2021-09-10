@@ -63,3 +63,7 @@ class FileStorage:
             if self.__objects[key] is not None:
                 del self.__objects[key]
                 self.save()
+
+    def close(self):
+        """ method us for deserializing the json file to objects """
+        slef.reload()
