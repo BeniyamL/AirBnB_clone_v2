@@ -19,11 +19,13 @@ def helo_hbnb():
     """ display HBNB """
     return "HBNB"
 
+
 @app.route('/c/<text>', strict_slashes=False)
 def disply_text(text):
     """ display C followed by the value of a text """
     text = text.replace("_", " ")
     return "C {}".format(text)
+
 
 if __name__ == "__main__":
     """ main method """

@@ -23,7 +23,7 @@
 	vertical-align: middle;
 	height: 100%;
 	float: left;
-    	width: 25%;
+    width: 25%;
 
 	line-height: 20px;
 }
@@ -40,19 +40,18 @@
 
 	border: 1px solid #DDDDDD;
 	border-radius: 4px;
+}
 
-	max-height: 300px;
-	overflow-y: scroll;
+.locations:hover .popover {
+	display: inline-block;
 	position: relative;
 	z-index: 200;
 }
 
-.locations:hover .popover {
-	display: block;
-}
-
 .filter_amenities:hover .popover {
-	display: block;
+	display: inline-block;
+	position: relative;
+	z-index: 200;
 }
 
 ul {

@@ -4,8 +4,6 @@
 	flex-wrap: wrap;
 	margin: 45px auto;
 	text-align: center;
-	z-index: 100;
-	position: relative;
 }
 
 article {
@@ -28,9 +26,10 @@ article {
 
 .headline {
 	display: flex;
-	flex-direction: row;
+	justify-content: space-between;
+	/**flex-direction: row;
 	position: relative;
-
+	**/
 	height: 80px;	
 	width: 100%;
 }
@@ -38,11 +37,12 @@ article {
 .price_by_night {
 	display: flex;
 	justify-content: center;
-	align-self: flex-end;
-
+	/**align-self: flex-end;**/
+	align-items: right;
+	/**
 	position: absolute;
 	right: 0;
-
+	**/
 	line-height: 60px;
 	color: #FF5A5F;
 	font-size: 30px;
@@ -113,7 +113,7 @@ article .amenities {
 
 .article_title {
 	font-size: 30px;
-	margin: 20px auto;
+	margin: 10px auto;
 	padding: 0px;
 }
 

@@ -16,7 +16,8 @@ def display_hbnb():
     """ Display all states """
     all_states = storage.all("State")
     all_amenities = storage.all("Amenity")
-    return render_template("10-hbnb_filters.html", all_states=all_states, all_amenities=all_amenities)
+    return render_template("10-hbnb_filters.html",
+                           all_states=all_states, all_amenities=all_amenities)
 
 
 @app.teardown_appcontext

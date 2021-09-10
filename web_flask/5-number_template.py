@@ -47,7 +47,6 @@ def display_template_number(n):
     return render_template("5-number.html", n=n)
 
 
-
 if __name__ == "__main__":
     """ main method """
     app.run(host="0.0.0.0")

@@ -7,13 +7,11 @@ from models import storage
 
 
 app = Flask(__name__)
-app.jinja_env.trim_blocks = True
-app.jinja_env.lstrip_blocks = True
 
 
 @app.route('/hbnb', strict_slashes=False)
 def display_hbnb():
-    """ Display all states """
+    """ Display content of hbnb """
     all_states = storage.all("State")
     all_amenities = storage.all("Amenity")
     all_places = storage.all("Place")

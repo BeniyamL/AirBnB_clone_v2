@@ -44,10 +44,14 @@
 
 .locations:hover .popover {
 	display: inline-block;
+	position: relative;
+	z-index: 200;
 }
 
 .filter_amenities:hover .popover {
 	display: inline-block;
+	position: relative;
+	z-index: 200;
 }
 
 ul {
